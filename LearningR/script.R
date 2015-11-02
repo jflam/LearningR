@@ -336,3 +336,78 @@ colSums(filtered)
 max(colSums(filtered))
 
 # Lecture 8: Matrix Arithmetic
+
+# consider this simple matrix
+m <- matrix(1:6, nrow = 3, ncol = 2)
+m
+
+# you can do scalar arithmetic operations against a matrix where the operator
+# will apply to all elements within the matrix
+m * 3
+m + 3
+
+# you can total rows or columns in a matrix to yield a vector
+rowSums(m)
+colSums(m)
+
+# consider this other matrix
+m2 <- matrix(2:7, nrow = 3, ncol = 2)
+m2
+
+# matrix - matrix operations are also pairwise
+m2 - m
+m2 * m
+
+# recycling also applies to creation of matrices. note row-major
+m <- matrix(1:3, nrow = 3, ncol = 2)
+m
+
+# matrix matrix multiplication is element-wise (note not linear algebra definition)
+# linear algebra matrix multiply uses the %*% operator in R
+twos <- matrix(2, nrow = 3, ncol = 2)
+twos
+
+m * twos
+
+# Lab 8 - this is pretty misleading lab
+# Star Wars box office in millions (!)
+new_hope <- c(460.998, 314.4)
+empire_strikes <- c(290.475, 247.900)
+return_jedi <- c(309.306, 165.8)
+star_wars_matrix <- rbind(new_hope, empire_strikes, return_jedi)
+colnames(star_wars_matrix) <- c("US", "non-US")
+rownames(star_wars_matrix) <- c("A New Hope", "The Empire Strikes Back", "Return of the Jedi")
+
+# Ticket price is $5, so we get an estimate of # of visitors by dividing
+# box office take by dollars. Note that we want the number of visitors to
+# be in millions, just like the box office take is in $millions.
+# Estimation of visitors
+visitors <- star_wars_matrix / 5
+
+# Print the estimate to the console
+visitors
+
+# Lecture 9: Factors
+
+# Categorical variables (think enums)
+
+# note that this is a vector of strings
+blood <- c("B", "AB", "O", "A", "O", "O", "A", "B")
+
+# the factor function will extract all of the unique factors, a count of each one,
+# from the vector. it will also sort them alphabetically 
+blood_factor <- factor(blood)
+blood_factor
+
+# the str() function displays the internal representation of an R variable
+# note that it is actually a vector of integers
+str(blood_factor)
+
+# if you want to manually specify the factors, you can determine the ordering
+# explicitly via the levels named parameter to the factor function:
+blood_factor2 <- factor(blood, levels = c("O", "A", "B", "AB"))
+blood_factor2
+
+# it is possible to rename them as well, which is something that is done
+# during a data cleaning operation by assigning labels for each level
+factor(blood, levels=c("O", "A", "B", "AB"), labels=c("BT_O", "BT_A", "BT_B", "BT_AB"))
