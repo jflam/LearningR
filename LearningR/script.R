@@ -390,17 +390,28 @@ visitors
 # Lecture 9: Factors
 
 # Categorical variables (think enums)
+# You typically want to process a vector of data and generate a histogram of the values
 
 # note that this is a vector of strings
 blood <- c("B", "AB", "O", "A", "O", "O", "A", "B")
 
 # the factor function will extract all of the unique factors, a count of each one,
 # from the vector. it will also sort them alphabetically 
+# the reason why you want to treat as factors vs. a vector of strings is efficiency
+# factors are much quicker to process.
 blood_factor <- factor(blood)
 blood_factor
 
+# Once converted into a factor, it extracts out the levels (unique values) of the factor.
+# Levels extract by default are in alphabetical order.
+
+# a very useful R function is summary(). When passed a factor, you can see a count
+# of each level in the factor, for example.
+summary(blood_factor)
+
 # the str() function displays the internal representation of an R variable
-# note that it is actually a vector of integers
+# note that it is actually a vector of integers. This provides a more compact
+# in-memory representation than storing them as strings
 str(blood_factor)
 
 # if you want to manually specify the factors, you can determine the ordering
@@ -411,3 +422,24 @@ blood_factor2
 # it is possible to rename them as well, which is something that is done
 # during a data cleaning operation by assigning labels for each level
 factor(blood, levels=c("O", "A", "B", "AB"), labels=c("BT_O", "BT_A", "BT_B", "BT_AB"))
+
+# Sometimes you want levels to be ordered. R distinguishes between Nominal (unordered)
+# and ordered factors. Ordered factors are ones where <, > operators make sense, such
+# as T-shirt size.
+t_shirt_size_factors <- factor(c("S", "M", "S", "S", "L", "XL"), levels = c("S", "M", "L", "XL"), ordered = TRUE, labels = c("Small", "Medium", "Large", "Extra Large"))
+summary(t_shirt_size_factors)
+
+# Ordered factors allow you to use arithmetic operators to compare them. See this example:
+
+# Definition of speed_vector and speed_factor
+# Analyst performance for analysts #1 -> #5
+speed_vector <- c("Fast", "Slow", "Slow", "Fast", "Ultra-fast")
+
+# Note that it is ordered
+factor_speed_vector <- factor(speed_vector, ordered = TRUE, levels = c("Slow", "Fast", "Ultra-fast"))
+
+# Compare DA2 with DA5: compare_them
+compare_them <- factor_speed_vector[2] > factor_speed_vector[5]
+
+# Print compare_them: Is DA2 faster than DA5?
+compare_them
