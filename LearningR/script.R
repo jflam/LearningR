@@ -253,7 +253,7 @@ m <- matrix(1:6, ncol = 2)
 m
 colSums(m)
 
-# matrix subsetting
+# Lecture 7: matrix subsetting
 m <- matrix(1:12, nrow = 3)
 
 # retrieve single element using [row, col] indices
@@ -266,3 +266,73 @@ m[3, ]
 # retrieve a single column
 m[, 1]
 
+# can pass vectors in to select elements to retrieve
+subset <- m[3, c(2, 3)]
+subset[1] == 6
+subset[2] == 9
+
+# can pass vectors for either dimension to subset
+subset <- m[c(1, 2), c(2, 3)]
+subset[1, 1] == 4
+subset[1, 2] == 7
+subset[2, 1] == 5
+subset[2, 2] == 8
+
+# alternate way to compare a matrix to a vector - remember row-major
+subset == c(4, 5, 7, 8) 
+
+# can subset using names instead of indices
+rownames(m) <- c("r1", "r2", "r3")
+colnames(m) <- c("c1", "c2", "c3", "c4")
+
+m["r1", "c1"] == 1
+m["r1", ]
+m[, "c1"]
+
+# can use vectors of names to subset as well
+m[1, c("c1", "c2")]
+m[c("r1", "r2"), c("c1", "c2")]
+
+# can use a logical vector to select items (useful for filtering)
+# grab top-left corner
+m[c(TRUE, TRUE, FALSE), c(TRUE, TRUE, FALSE, FALSE)]
+
+# note that recycling is used as well - we get rows 1, 3 and cols 1, 3 here
+m[c(TRUE, FALSE), c(TRUE, FALSE)]
+
+# note that you can abbreviate logicals as T and F
+m[c(T, T, F), c(T, T, F, F)] == m[c(TRUE, TRUE, FALSE), c(TRUE, TRUE, FALSE, FALSE)]
+ 
+# this lab exercise is useful... copying the data
+view_count_1 <- rbind(c(1, 3, 2, 3), c(2, 4, 3, 2), c(1, 3, 2, 1), c(1, 2, 1, 1), c(1, 1, 0, 1), c(0, 1, 0, 0))
+view_count_2 <- rbind(c(2, 1, 5, 0), c(2, 1, 2, 0), c(2, 0, 3, 0), c(4, 2, 2, 0), c(5, 3, 2, 0), c(4, 1, 3, 1))
+
+movie_names <- c("A New Hope", "The Empire Strikes Back", "Return of the Jedi", "The Phantom Menace", "Attack of the Clones", "Revenge of the Sith")
+rownames(view_count_1) <- movie_names
+rownames(view_count_2) <- movie_names
+
+colnames(view_count_1) <- c("Mark", "Laurent", "Rachel", "Pierre")
+colnames(view_count_2) <- c("Christel", "Walter", "Dave", "Monica")
+
+view_count_1
+view_count_2
+
+# Q. Who among the most vocal fans (Rachel, Walter, Dave) have watched
+# the movies the most?
+
+# combine the matrices together into a large one
+combo <- cbind(view_count_1, view_count_2)
+combo
+
+# filter only these people's values
+filtered <- combo[, c("Rachel", "Walter", "Dave")]
+filtered
+
+# total how many people have viewed
+colSums(filtered)
+
+# now determine the max value
+# TODO: why doesn't the resultant vector have label?
+max(colSums(filtered))
+
+# Lecture 8: Matrix Arithmetic
