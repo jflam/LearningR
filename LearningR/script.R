@@ -597,25 +597,25 @@ people
 people[3, 2]
 
 # subset using column names
-people[3, "Age"]
+people[3, "age"]
 
 # wildcard to get all columns in row 3
 people[3,]
 
 # wildcard to get all ages
-people[, "Age"]
+people[, "age"]
 
 # note that the return type is a dataframe when we use [] operator with
 # select specific rows and columns
-df2 <- people[c(1, 3), c("Name", "Age")]
+df2 <- people[c(1, 3), c("Name", "age")]
 is.data.frame(df2)
 
 # a single dimension
-is.data.frame(people["Age"])
-is.data.frame(people[, "Age"]) # Not true
+is.data.frame(people["age"])
+is.data.frame(people[, "age"]) # Not true
 
 # if you want the vector, you have to use the [[]] operator
-v <- people[["Age"]]
+v <- people[["age"]]
 is.vector(v)
 
 # extending data frames by adding rows or columns
@@ -623,18 +623,35 @@ is.vector(v)
 
 # can sort your data frames
 sort(people$age)
-ranks <- order(people$Age)
+ranks <- order(people$age)
 ranks
 
 # the ranks vector is used to select the order in which to get the frames
 people[ranks,]
 
 # to get decrasing ranks, use
-people[order(people$Age, decreasing = TRUE), ]
+people[order(people$age, decreasing = TRUE), ]
 
 # can also use rev() function to reverse ranks and plot
 people[rev(ranks), ]
 
+# can also order based on row names - use row.names() to get row names from a data frame
+mtcars[order(row.names(mtcars)),]
+
+# subset function takes a predicate expression assigned to named parameter subset for filter
+subset(people, subset = age < 21)
+
+# extending - can add new columns by using $ or [] notation
+people$gender = c("M", "M", "M")
+people
+
+
+# Module 17 
+# extending - can add new rows (observations) by using rbind to combine data frames
+# note that columns are matched using names, so need to ensure that the # columns and names match
+person <- data.frame(name = "Carolyn", age = 24, child = FALSE, gender = "F")
+people <- rbind(people, person)
+people
 
 # Module 14: Basic Graphics
 
@@ -644,3 +661,54 @@ df2 <- data.frame(mtcars$mpg, cyl_factor)
 head(df2)
 str(df2)
 plot(df2$cyl_factor, df2$mpg)
+
+# Module 15 - customizing plots
+
+# par() function sets session-wide variables for plot parameters
+
+# set all plots to be plotted in blue in this session
+par(col = "blue")
+plot(mtcars$mpg, mtcars$disp)
+
+# note that par() returns a list ... so you can use standard list operators on it
+par()$col
+
+# Module 16 - multiple plots
+
+# mfrow parameter takes a vector (rows, cols) for # of plots you want in a grid
+# mfrow can be set in the par list
+
+par(mfrow = c(2, 2)) # row-major adding of plots
+par(mfcol = c(2, 2)) # col-major adding of plots
+
+par(mfrow = c( 1, 1)) # resets to single plot
+
+chickwts
+
+# layout parameter accepts a matrix that indicates where the plot should go
+grid <- rbind(c(1, 1), c(2, 3))
+grid
+
+# plot 1 will be double-wide on top, with plots 2 and 3 showing smaller below
+layout(grid)
+
+layout(1) # will reset plot grid to just 1 plot per surface
+
+# can save old plot parameters to a variable and then restore
+old_par <- par()
+# change par ... 
+# restore par
+par(old_par)
+
+# stacking data on a plot
+# movies is pre-loaded in your workspace
+
+# Fit a linear regression: movies_lm
+movies_lm <- lm(movies$rating~movies$votes)
+
+# Build a scatterplot: rating versus votes
+plot(movies$votes, movies$rating)
+
+# Add straight line to scatterplot
+abline(coef(movies_lm))
+
