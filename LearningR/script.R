@@ -443,3 +443,204 @@ compare_them <- factor_speed_vector[2] > factor_speed_vector[5]
 
 # Print compare_them: Is DA2 faster than DA5?
 compare_them
+
+# Lecture 10: Lists
+
+# Whereas vectors and matrices are 1 and 2 dimensional homogeneous data structures
+# where all elements must have the same type, lists are 1 dimensional data
+# structures that can contain elements of arbitrary type and can be heterogeneous.
+
+# Data records are often heterogeneous in nature
+# i.e., Name, Age, SSN
+
+# Note that the c() function creates a vector, and will automatically coerce
+# the elements to a common format; in this case they will all be strings.
+c("Bob", 21, "555-55-5555")
+
+# Now look here - we now have a list that contains 3 vectors
+# First is string, second is numeric, third is string
+taxpayer <- list("Bob", 21, "555-55-5555")
+
+# Use the is.list() function to test for list-ness
+is.list(taxpayer)
+
+# Just like vectors, lists can have names
+names(taxpayer) <- c("Name", "Age", "SSN")
+taxpayer
+
+# To index into specific named fields in the list you can use the $ operator
+taxpayer$Name
+
+taxpayer[1] == taxpayer$Name
+taxpayer[2] == taxpayer$Age
+taxpayer[3] == taxpayer$SSN
+
+# Lists can contain arbitrary data types including other lists
+
+
+# Another way to create a list is with named parameters for the labels
+taxpayer2 <- list(Name = "John", Age = 18, SSN = "555-55-5556")
+
+# Yet another way to create a named list is to use the names() function
+taxpayer3 <- list("George", Age = 55, SSN = "555-55-5557")
+taxpayer3
+
+names(taxpayer3) <- c("Name", "Age", "SSN")
+taxpayer3
+
+# You can use the structure function str() to dump the contents of a list in
+# a more compact and readable representation.
+
+# Compare
+taxpayer2
+
+# with this:
+str(taxpayer2)
+
+# Lecture 11: Subsetting and extending lists
+
+# Note that selecting elements from lists require the use of the [[ ]] operator
+l <- list(1, 2, "3", "4")
+
+# Using the [] operator returns another list
+l[1]
+is.list(l[1])
+
+# Using the [[]] operator returns the value at index 1
+l[[1]]
+is.list(l[[1]])
+
+# Some of the rationale for why the [] operator returns a list is that
+# it allows for easy slicing into an existing list. For example:
+a <- list(1, 2, 3, 4)
+b <- a[c(1,3,4)]
+
+# Attempting to use a vector as a value for the [[]] operator really means:
+c <- a[[c(1, 3, 4)]]
+result <- a[[1]][[3]][[4]] # note that this is a recursive indexing operation
+
+# You can extend lists by using the $ or [[]] operators to add additional elements
+
+taxpayer <- list(Name = "Bob", Age = 21, SSN = "555-55-5555")
+taxpayer$IsAlien = TRUE
+taxpayer[["IsAlive"]] = FALSE
+str(taxpayer)
+
+# Yet another way to extend a list is by assigning a vector composed of
+# a reference to the list, and a named value. The name will be used as
+# the name of the new item in the list with the value assigned to it.
+taxpayer <- c(taxpayer, Ethnicity = "Asian")
+str(taxpayer)
+
+# Note that if you are subsetting a list and you get to a vector or matrix
+# remember to use the [] operator vs. the [[]] operator
+
+# Lesson 12: Exploring the Data Frame
+
+# Lists are primarily 1 dimensional (although you can created nested)
+# lists for higher levels of dimensionality, but they are awkward to use.
+
+# Or ... you can create a DataFrame
+# Think of rows as observations and columns as variables (features)
+
+# DataFrames are typically not created by hand; rather they are created
+# by importing data from some data source (e.g., SQL, CSV etc.)
+
+name <- c("Bob", "Steve", "Mike")
+age <- c(42, 8, 65)
+child <- c(FALSE, TRUE, FALSE)
+
+# Note that the names of columns are inferred from the names of the
+# vectors that contained the initialization values. The rows are simply
+# numbered.
+people <- data.frame(name, age, child)
+people
+
+# Can also use the names() function to add names after the fact to
+# an imported data set (e.g., a csv file without headers)
+names(people) <- c("Name", "Age", "IsChild")
+people
+
+# Inspect the structure of a DataFrame
+# Notes: 1) Name is converted to factors
+# 2) Each column represented by an element in a list (i.e., DataFrame is a list)
+# 3) All columns are equal length
+str(people)
+
+# If you want to store strings as characters instead of factors, do this:
+# set stringsAsFactors flag to FALSE
+people2 <- data.frame(name, age, child, stringsAsFactors = FALSE)
+str(people2)
+
+# Dimensions of a data frame via the dim() function - returns rows, cols
+dim(people2)
+
+# Print first or last rows of data frame via head() or tail() functions
+# mtcars is a built-in dataset in R
+head(mtcars)
+tail(mtcars)
+
+# Can display internal structure via str()
+str(mtcars)
+
+# Module 13: Subset, Extend, Sort data frames
+
+# construct a data frame
+name <- c("Bob", "Steve", "Mike")
+age <- c(42, 8, 65)
+child <- c(FALSE, TRUE, FALSE)
+people <- data.frame(name, age, child)
+people
+
+# You can subset data frames using all of the methods from matrices
+# subset using matrix notation
+people[3, 2]
+
+# subset using column names
+people[3, "Age"]
+
+# wildcard to get all columns in row 3
+people[3,]
+
+# wildcard to get all ages
+people[, "Age"]
+
+# note that the return type is a dataframe when we use [] operator with
+# select specific rows and columns
+df2 <- people[c(1, 3), c("Name", "Age")]
+is.data.frame(df2)
+
+# a single dimension
+is.data.frame(people["Age"])
+is.data.frame(people[, "Age"]) # Not true
+
+# if you want the vector, you have to use the [[]] operator
+v <- people[["Age"]]
+is.vector(v)
+
+# extending data frames by adding rows or columns
+# can use cbind() or rbind()
+
+# can sort your data frames
+sort(people$age)
+ranks <- order(people$Age)
+ranks
+
+# the ranks vector is used to select the order in which to get the frames
+people[ranks,]
+
+# to get decrasing ranks, use
+people[order(people$Age, decreasing = TRUE), ]
+
+# can also use rev() function to reverse ranks and plot
+people[rev(ranks), ]
+
+
+# Module 14: Basic Graphics
+
+# Change cylinders into categories
+cyl_factor <- factor(mtcars$cyl)
+df2 <- data.frame(mtcars$mpg, cyl_factor)
+head(df2)
+str(df2)
+plot(df2$cyl_factor, df2$mpg)
