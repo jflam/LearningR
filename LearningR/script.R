@@ -1,3 +1,5 @@
+# R file where I collect code snippets to better understand the language
+
 # arithmetic operators
 3 + 3
 3 - 3
