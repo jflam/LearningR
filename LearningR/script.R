@@ -1,5 +1,3 @@
-# R Script
-
 # arithmetic operators
 3 + 3
 3 - 3
