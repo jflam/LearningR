@@ -1,4 +1,5 @@
 # R file where I collect code snippets to better understand the language
+# by John Lam
 
 # arithmetic operators
 3 + 3
